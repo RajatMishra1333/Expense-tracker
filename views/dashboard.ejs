@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Expense Tracker</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">💰 Expense Tracker</div>
+                <nav class="nav-links">
+                    <a href="/dashboard">Dashboard</a>
+                    <a href="/add">Add Expense</a>
+                    <a href="/logout">Logout</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="card">
+                <h1>Welcome back, <%= user.name %>!</h1>
+                <p>Here's your expense overview</p>
+            </div>
+
+            <!-- Dashboard Statistics -->
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <h3>Total Expenses</h3>
+                    <div class="stat-value">$<%= totalExpenses.toFixed(2) %></div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Transactions</h3>
+                    <div class="stat-value"><%= expenses.length %></div>
+                </div>
+                <div class="stat-card">
+                    <h3>Categories Used</h3>
+                    <div class="stat-value"><%= Object.keys(expensesByCategory).length %></div>
+                </div>
+                <div class="stat-card">
+                    <h3>Average per Transaction</h3>
+                    <div class="stat-value">
+                        $<%= expenses.length > 0 ? (totalExpenses / expenses.length).toFixed(2) : '0.00' %>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Breakdown -->
+            <% if (Object.keys(expensesByCategory).length > 0) { %>
+            <div class="card">
+                <h2>Expenses by Category</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                    <% Object.entries(expensesByCategory).forEach(([category, amount]) => { %>
+                    <div class="stat-card">
+                        <h4 style="text-transform: capitalize; margin-bottom: 0.5rem;"><%= category %></h4>
+                        <div class="stat-value" style="font-size: 1.5rem; color: #667eea;">
+                            $<%= amount.toFixed(2) %>
+                        </div>
+                        <div style="font-size: 0.875rem; color: #666; margin-top: 0.5rem;">
+                            <%= ((amount / totalExpenses) * 100).toFixed(1) %>% of total
+                        </div>
+                    </div>
+                    <% }); %>
+                </div>
+            </div>
+            <% } %>
+
+            <!-- Expense Controls -->
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h2>Recent Expenses</h2>
+                    <div style="display: flex; gap: 1rem;">
+                        <a href="/add" class="btn btn-primary">Add New Expense</a>
+                        <button id="export-csv" class="btn btn-secondary">Export CSV</button>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div style="display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="category-filter">Filter by Category:</label>
+                        <select id="category-filter" style="width: auto;">
+                            <option value="all">All Categories</option>
+                            <option value="food">Food & Dining</option>
+                            <option value="transport">Transportation</option>
+                            <option value="entertainment">Entertainment</option>
+                            <option value="utilities">Utilities</option>
+                            <option value="healthcare">Healthcare</option>
+                            <option value="shopping">Shopping</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="search-expenses">Search:</label>
+                        <input type="text" id="search-expenses" placeholder="Search expenses..." style="width: 200px;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expense List -->
+            <% if (expenses.length > 0) { %>
+            <div class="expense-list">
+                <div class="expense-header">
+                    <div>Description</div>
+                    <div>Amount</div>
+                    <div>Category</div>
+                    <div>Date</div>
+                    <div>Actions</div>
+                </div>
+                <% expenses.forEach(expense => { %>
+                <div class="expense-item" data-category="<%= expense.category %>" data-expense-id="<%= expense._id %>">
+                    <div class="expense-description"><%= expense.description %></div>
+                    <div class="expense-amount">$<%= expense.amount.toFixed(2) %></div>
+                    <div class="expense-category category-<%= expense.category %>">
+                        <%= expense.category.charAt(0).toUpperCase() + expense.category.slice(1) %>
+                    </div>
+                    <div class="expense-date">
+                        <%= expense.date.toLocaleDateString('en-US', { 
+                            year: 'numeric', 
+                            month: 'short', 
+                            day: 'numeric' 
+                        }) %>
+                    </div>
+                    <div>
+                        <button class="btn btn-danger btn-small delete-expense" data-id="<%= expense._id %>">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+                <% }); %>
+            </div>
+            <% } else { %>
+            <div class="card" style="text-align: center; padding: 3rem;">
+                <h3>No expenses yet</h3>
+                <p>Start tracking your expenses by adding your first transaction!</p>
+                <a href="/add" class="btn btn-primary" style="margin-top: 1rem;">Add Your First Expense</a>
+            </div>
+            <% } %>
+
+            <!-- Quick Stats -->
+            <% if (expenses.length > 0) { %>
+            <div class="card">
+                <h2>Quick Insights</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                    <div>
+                        <h4>Highest Expense</h4>
+                        <% const highestExpense = expenses.reduce((max, expense) => expense.amount > max.amount ? expense : max); %>
+                        <p><strong>$<%= highestExpense.amount.toFixed(2) %></strong></p>
+                        <p style="font-size: 0.875rem; color: #666;"><%= highestExpense.description %></p>
+                    </div>
+                    <div>
+                        <h4>Most Common Category</h4>
+                        <% 
+                        const categoryCounts = expenses.reduce((acc, expense) => {
+                            acc[expense.category] = (acc[expense.category] || 0) + 1;
+                            return acc;
+                        }, {});
+                        const mostCommon = Object.entries(categoryCounts).sort((a, b) => b[1] - a[1])[0];
+                        %>
+                        <p><strong><%= mostCommon[0].charAt(0).toUpperCase() + mostCommon[0].slice(1) %></strong></p>
+                        <p style="font-size: 0.875rem; color: #666;"><%= mostCommon[1] %> transactions</p>
+                    </div>
+                    <div>
+                        <h4>Last 7 Days</h4>
+                        <% 
+                        const lastWeek = new Date();
+                        lastWeek.setDate(lastWeek.getDate() - 7);
+                        const recentExpenses = expenses.filter(expense => expense.date >= lastWeek);
+                        const recentTotal = recentExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+                        %>
+                        <p><strong>$<%= recentTotal.toFixed(2) %></strong></p>
+                        <p style="font-size: 0.875rem; color: #666;"><%= recentExpenses.length %> transactions</p>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </main>
+
+    <footer style="background: #333; color: white; text-align: center; padding: 2rem 0; margin-top: 4rem;">
+        <div class="container">
+            <p>&copy; 2024 Expense Tracker. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>

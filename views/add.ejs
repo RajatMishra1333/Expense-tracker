@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Expense - Expense Tracker</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">💰 Expense Tracker</div>
+                <nav class="nav-links">
+                    <a href="/dashboard">Dashboard</a>
+                    <a href="/add">Add Expense</a>
+                    <a href="/logout">Logout</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="card">
+                <h1>Add New Expense</h1>
+                <p>Track your spending by adding a new expense</p>
+            </div>
+
+            <div class="card">
+                <% if (error) { %>
+                    <div class="error">
+                        <%= error %>
+                    </div>
+                <% } %>
+
+                <form id="add-expense-form" action="/add-expense" method="POST">
+                    <div class="form-group">
+                        <label for="description">Description *</label>
+                        <input 
+                            type="text" 
+                            id="description" 
+                            name="description" 
+                            required 
+                            placeholder="What did you spend on?"
+                            maxlength="200"
+                        >
+                        <small style="color: #666; font-size: 0.875rem;">Be descriptive to help track your spending patterns</small>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="amount">Amount ($) *</label>
+                            <input 
+                                type="number" 
+                                id="amount" 
+                                name="amount" 
+                                required 
+                                step="0.01" 
+                                min="0.01"
+                                max="999999.99"
+                                placeholder="0.00"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="category">Category *</label>
+                            <select id="category" name="category" required>
+                                <option value="">Choose a category</option>
+                                <option value="food">🍔 Food & Dining</option>
+                                <option value="transport">🚗 Transportation</option>
+                                <option value="entertainment">🎬 Entertainment</option>
+                                <option value="utilities">💡 Utilities</option>
+                                <option value="healthcare">🏥 Healthcare</option>
+                                <option value="shopping">🛍️ Shopping</option>
+                                <option value="other">📝 Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="date">Date *</label>
+                        <input 
+                            type="date" 
+                            id="date" 
+                            name="date" 
+                            required
+                        >
+                        <small style="color: #666; font-size: 0.875rem;">When did this expense occur?</small>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                        <a href="/dashboard" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Add Expense</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Quick Add Suggestions -->
+            <div class="card">
+                <h2>Quick Add Suggestions</h2>
+                <p>Common expenses you might want to add:</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                    <div class="quick-expense" data-desc="Coffee" data-amount="5.00" data-category="food">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">☕</div>
+                        <h4>Coffee</h4>
+                        <p>$5.00 - Food</p>
+                    </div>
+                    <div class="quick-expense" data-desc="Lunch" data-amount="15.00" data-category="food">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🍽️</div>
+                        <h4>Lunch</h4>
+                        <p>$15.00 - Food</p>
+                    </div>
+                    <div class="quick-expense" data-desc="Gas" data-amount="50.00" data-category="transport">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">⛽</div>
+                        <h4>Gas</h4>
+                        <p>$50.00 - Transport</p>
+                    </div>
+                    <div class="quick-expense" data-desc="Groceries" data-amount="80.00" data-category="food">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🛒</div>
+                        <h4>Groceries</h4>
+                        <p>$80.00 - Food</p>
+                    </div>
+                    <div class="quick-expense" data-desc="Movie Ticket" data-amount="12.00" data-category="entertainment">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🎬</div>
+                        <h4>Movie</h4>
+                        <p>$12.00 - Entertainment</p>
+                    </div>
+                    <div class="quick-expense" data-desc="Parking" data-amount="10.00" data-category="transport">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🅿️</div>
+                        <h4>Parking</h4>
+                        <p>$10.00 - Transport</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tips -->
+            <div class="card">
+                <h2>💡 Tips for Better Expense Tracking</h2>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 1rem; padding-left: 1.5rem; position: relative;">
+                        <span style="position: absolute; left: 0; top: 0;">✓</span>
+                        <strong>Be specific:</strong> Instead of "Food", write "Lunch at Pizza Place"
+                    </li>
+                    <li style="margin-bottom: 1rem; padding-left: 1.5rem; position: relative;">
+                        <span style="position: absolute; left: 0; top: 0;">✓</span>
+                        <strong>Track immediately:</strong> Add expenses as soon as you make them
+                    </li>
+                    <li style="margin-bottom: 1rem; padding-left: 1.5rem; position: relative;">
+                        <span style="position: absolute; left: 0; top: 0;">✓</span>
+                        <strong>Use correct categories:</strong> This helps with budget analysis
+                    </li>
+                    <li style="margin-bottom: 1rem; padding-left: 1.5rem; position: relative;">
+                        <span style="position: absolute; left: 0; top: 0;">✓</span>
+                        <strong>Keep receipts:</strong> For verification and tax purposes
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer style="background: #333; color: white; text-align: center; padding: 2rem 0; margin-top: 4rem;">
+        <div class="container">
+            <p>&copy; 2024 Expense Tracker. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="/js/main.js"></script>
+    <script>
+        // Quick expense functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const quickExpenses = document.querySelectorAll('.quick-expense');
+            
+            quickExpenses.forEach(expense => {
+                expense.style.cursor = 'pointer';
+                expense.style.padding = '1rem';
+                expense.style.border = '2px solid #eee';
+                expense.style.borderRadius = '10px';
+                expense.style.textAlign = 'center';
+                expense.style.transition = 'all 0.3s';
+                
+                expense.addEventListener('mouseenter', function() {
+                    this.style.borderColor = '#667eea';
+                    this.style.backgroundColor = '#f8f9ff';
+                });
+                
+                expense.addEventListener('mouseleave', function() {
+                    this.style.borderColor = '#eee';
+                    this.style.backgroundColor = 'white';
+                });
+                
+                expense.addEventListener('click', function() {
+                    const description = this.getAttribute('data-desc');
+                    const amount = this.getAttribute('data-amount');
+                    const category = this.getAttribute('data-category');
+                    
+                    document.getElementById('description').value = description;
+                    document.getElementById('amount').value = amount;
+                    document.getElementById('category').value = category;
+                    
+                    // Scroll to form
+                    document.getElementById('add-expense-form').scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

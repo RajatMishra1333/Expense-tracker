@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker - Login</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">💰 Expense Tracker</div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="auth-container">
+                <div class="card">
+                    <div class="auth-tabs">
+                        <button class="auth-tab active" data-form="login-form">Login</button>
+                        <button class="auth-tab" data-form="register-form">Register</button>
+                    </div>
+
+                    <% if (error) { %>
+                        <div class="error">
+                            <%= error %>
+                        </div>
+                    <% } %>
+
+                    <!-- Login Form -->
+                    <form id="login-form" class="auth-form active" action="/login" method="POST">
+                        <h2>Welcome Back!</h2>
+                        <p>Please sign in to your account</p>
+
+                        <div class="form-group">
+                            <label for="login-email">Email Address</label>
+                            <input 
+                                type="email" 
+                                id="login-email" 
+                                name="email" 
+                                required 
+                                placeholder="Enter your email"
+                                autocomplete="email"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="login-password">Password</label>
+                            <input 
+                                type="password" 
+                                id="login-password" 
+                                name="password" 
+                                required 
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                            >
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            Sign In
+                        </button>
+                    </form>
+
+                    <!-- Register Form -->
+                    <form id="register-form" class="auth-form" action="/register" method="POST">
+                        <h2>Create Account</h2>
+                        <p>Join us to start tracking your expenses</p>
+
+                        <div class="form-group">
+                            <label for="register-name">Full Name</label>
+                            <input 
+                                type="text" 
+                                id="register-name" 
+                                name="name" 
+                                required 
+                                placeholder="Enter your full name"
+                                autocomplete="name"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="register-email">Email Address</label>
+                            <input 
+                                type="email" 
+                                id="register-email" 
+                                name="email" 
+                                required 
+                                placeholder="Enter your email"
+                                autocomplete="email"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="register-password">Password</label>
+                            <input 
+                                type="password" 
+                                id="register-password" 
+                                name="password" 
+                                required 
+                                placeholder="Create a password (min 6 characters)"
+                                autocomplete="new-password"
+                                minlength="6"
+                            >
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            Create Account
+                        </button>
+                    </form>
+                </div>
+
+                <div class="card" style="text-align: center; margin-top: 2rem;">
+                    <h3>Why Choose Our Expense Tracker?</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-top: 1rem;">
+                        <div>
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📊</div>
+                            <h4>Track Everything</h4>
+                            <p>Monitor all your expenses in one place</p>
+                        </div>
+                        <div>
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📈</div>
+                            <h4>Analyze Spending</h4>
+                            <p>Get insights into your spending patterns</p>
+                        </div>
+                        <div>
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎯</div>
+                            <h4>Stay Organized</h4>
+                            <p>Categorize expenses for better budgeting</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer style="background: #333; color: white; text-align: center; padding: 2rem 0; margin-top: 4rem;">
+        <div class="container">
+            <p>&copy; 2024 Expense Tracker. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>
